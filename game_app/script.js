@@ -9,8 +9,8 @@ const PAIRS = [
   {
     id: "styrofoam-box",
     problem: { label: "Styrofoam lunch box", badge: "Problem" },
-    solution: { label: "Reusable hộp cơm", badge: "Solution" },
-    tip: "Bring your own hộp cơm when ordering cơm tấm or bún for takeout."
+    solution: { label: "Reusable lunch box", badge: "Solution" },
+    tip: "Bring your own lunch box when ordering cơm tấm or bún for takeout."
   },
   {
     id: "single-straw",
