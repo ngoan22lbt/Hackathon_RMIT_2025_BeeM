@@ -1,0 +1,137 @@
+:root {
+  --bg: #f6faf9;
+  --text: #1f2a2e;
+  --muted: #6c7a7f;
+  --brand: #0aa37f;
+  --brand-2: #058a6b;
+  --card: #ffffff;
+  --line: #d5e2df;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  color: var(--text);
+  background: var(--bg);
+}
+
+.screen { display: none; min-height: 100%; }
+.screen.active { display: block; }
+
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 32px 20px;
+  text-align: center;
+}
+
+h1, h2, h3 { margin: 0 0 8px; }
+.tagline { color: var(--muted); margin-top: 8px; }
+
+.menu-actions { display: flex; gap: 12px; justify-content: center; margin-top: 20px; }
+
+.btn {
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn.primary {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: white;
+}
+.btn:focus { outline: 2px solid var(--brand-2); outline-offset: 2px; }
+
+.hud {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line);
+}
+.stats { display: flex; gap: 16px; flex-wrap: wrap; }
+.hud-actions { display: flex; gap: 10px; }
+
+.grid {
+  max-width: 880px;
+  margin: 20px auto;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  padding: 10px;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 0.25s ease;
+}
+.card[aria-pressed="true"] { cursor: default; }
+
+.card-inner {
+  position: absolute; inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.4s ease;
+}
+.card.flipped .card-inner { transform: rotateY(180deg); }
+
+.card-face {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  padding: 10px;
+  backface-visibility: hidden;
+  border-radius: 12px;
+}
+
+.card-front {
+  background: var(--card);
+}
+.card-back {
+  background: repeating-linear-gradient(45deg, #e6f3f0, #e6f3f0 8px, #d9ede8 8px, #d9ede8 16px);
+  transform: rotateY(180deg);
+  color: #0b6150;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 12px;
+  padding: 4px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.tip {
+  min-height: 28px;
+  text-align: center;
+  color: var(--brand-2);
+  font-weight: 600;
+  margin: 6px 0 20px;
+}
+
+dialog {
+  max-width: 720px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px 16px 12px;
+}
+
+@media (max-width: 640px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}

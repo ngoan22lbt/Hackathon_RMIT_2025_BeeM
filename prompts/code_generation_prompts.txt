@@ -1,0 +1,5 @@
+Give me HTML structure for a simple game with three screens: Menu, Game, Results. I want to toggle with JS.
+Provide CSS to make a clean layout, 4×4 responsive grid, and simple card flip effect without external libs.
+Write JS to build a deck from Problem ↔ Solution pairs, shuffle, handle flips, match logic, HUD (pairs/moves/time), and a results screen.
+Add a short educational tip that shows only when a correct pair is made.
+Ensure keyboard accessibility: pressing Enter/Space on a focused card should flip it.

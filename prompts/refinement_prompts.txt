@@ -1,0 +1,4 @@
+The cards don’t flip back when mismatched. Here is my handler, please fix it: [paste].
+Timer keeps running on results; stop when all pairs matched.
+Add Restart and Quit buttons to HUD.
+Prevent double-click on already matched cards.

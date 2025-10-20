@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CoastGuard: Match Problems to Solutions</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <!-- Main Menu -->
+  <section id="main-menu" class="screen active" aria-labelledby="menu-title">
+    <div class="container">
+      <h1 id="menu-title">CoastGuard</h1>
+      <p class="tagline">Match real-world plastic problems to sustainable solutions in Vietnam.</p>
+
+      <div class="menu-actions">
+        <button id="start-btn" class="btn primary" aria-label="Start Game">Start</button>
+        <button id="info-btn" class="btn" aria-haspopup="dialog" aria-controls="info-dialog">Info</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gameplay -->
+  <section id="game-play" class="screen" aria-labelledby="game-title">
+    <header class="hud">
+      <h2 id="game-title">CoastGuard</h2>
+      <div class="stats">
+        <div><strong>Pairs:</strong> <span id="pairs-found">0</span>/<span id="pairs-total">0</span></div>
+        <div><strong>Moves:</strong> <span id="moves">0</span></div>
+        <div><strong>Time:</strong> <span id="time">00:00</span></div>
+      </div>
+      <div class="hud-actions">
+        <button id="restart-btn" class="btn">Restart</button>
+        <button id="quit-btn" class="btn">Quit</button>
+      </div>
+    </header>
+
+    <main>
+      <div id="grid" class="grid" role="grid" aria-label="Card grid"></div>
+      <div id="tip" class="tip" role="status" aria-live="polite"></div>
+    </main>
+  </section>
+
+  <!-- Results -->
+  <section id="results" class="screen" aria-labelledby="results-title">
+    <div class="container">
+      <h2 id="results-title">Mission Complete</h2>
+      <p class="scoreline">
+        You matched all <span id="r-pairs"></span> pairs in <span id="r-moves"></span> moves and <span id="r-time"></span>.
+      </p>
+      <div class="menu-actions">
+        <button id="play-again-btn" class="btn primary">Play Again</button>
+        <button id="back-menu-btn" class="btn">Back to Menu</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Info Dialog -->
+  <dialog id="info-dialog" aria-labelledby="info-title">
+    <h3 id="info-title">About the Game</h3>
+    <p>
+      Vietnam’s coasts and rivers face rising plastic pollution from single-use items, inadequate sorting, and storm-driven runoff.
+      In <em>CoastGuard</em>, each match links a real problem to a practical solution used by communities, NGOs, and local initiatives.
+    </p>
+    <ul class="info-list">
+      <li>Plastic bag → Reusable tote</li>
+      <li>Styrofoam lunch box → Reusable lunch box</li>
+      <li>Single-use straw → Metal/bamboo straw</li>
+      <li>Ghost fishing nets → Net retrieval & recycling</li>
+      <li>Polluted canal → Community cleanup & booms</li>
+      <li>Trash in drains → Grate cleaning & awareness</li>
+      <li>Open burning → Sorting & proper collection</li>
+      <li>Festival litter → Green events & volunteers</li>
+    </ul>
+    <form method="dialog">
+      <button class="btn primary">Close</button>
+    </form>
+  </dialog>
+
+  <script src="./script.js"></script>
+</body>
+</html>

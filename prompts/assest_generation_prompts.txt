@@ -1,0 +1,4 @@
+Generate a flat 2D button image labeled “Start” suitable for web, transparent PNG, soft green palette.
+Create 16 simple square card face images (1024x1365) with bold text: 8 “Problem” labels and 8 matching “Solution” labels, minimal style, readable on mobile.
+Create a subtle ocean-inspired seamless background texture (PNG).
+Generate a short positive “ding” sound for a correct match, and a short “whoosh” for card flip (WAV, <200ms).
