@@ -188,6 +188,8 @@ body {
   padding: 10px;
   backface-visibility: hidden;
   border-radius: 12px;
+  background-color: #fdfffa;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .card-back {
@@ -352,3 +354,71 @@ dialog {
 /* gentle float */
 @keyframes hp-float { 0%{transform:translateY(0)} 50%{transform:translateY(-4px)} 100%{transform:translateY(0)} }
 .hp-trash{ animation: hp-float 2.8s ease-in-out infinite; }
+
+
+/* desaturate + dim when lose screen is active */
+#lose-screen.screen.active {
+  filter: grayscale(30%);
+  background:
+    radial-gradient(40% 30% at 50% 10%, rgba(0,0,0,.08), transparent 60%),
+    linear-gradient(180deg, rgba(4,57,21,.06), rgba(4,57,21,.12));
+  position: relative;
+  overflow: hidden;
+}
+
+/* canvas sits behind the card */
+.lose-fx{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* raise the card above rain */
+#lose-screen .results-wrap { position: relative; z-index: 2; }
+
+.lose-card { animation: sad-pop .45s ease-out both; }
+@keyframes sad-pop {
+  from { transform: translateY(8px) scale(.98); opacity: 0; }
+  to   { transform: translateY(0)   scale(1);    opacity: 1; }
+}
+
+/* wobble title a little */
+.sad-wobble {
+  animation: wobble 2.4s ease-in-out infinite;
+}
+@keyframes wobble {
+  0%,100% { transform: rotate(0deg); }
+  35%     { transform: rotate(-1.3deg); }
+  70%     { transform: rotate(1.1deg); }
+}
+
+/* crying cloud */
+.sad-cloud{
+  position: relative;
+  width: 90px;
+  height: 70px;
+  margin: -8px auto 6px;
+  display: grid;
+  place-items: center;
+  animation: bob 3.2s ease-in-out infinite;
+}
+@keyframes bob {
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(4px); }
+}
+.sad-cloud .cloud { font-size: 54px; line-height: 1; }
+.sad-cloud .tear{
+  position: absolute;
+  top: 44px; left: 50%; transform: translateX(-50%);
+  font-size: 18px;
+  animation: drip 1.2s linear infinite;
+  opacity: .8;
+}
+@keyframes drip {
+  0%   { transform: translate(-50%, 0) scale(1); opacity: .9; }
+  90%  { transform: translate(-50%, 22px) scale(0.9); opacity: .1; }
+  100% { transform: translate(-50%, 22px) scale(0.9); opacity: 0; }
+}

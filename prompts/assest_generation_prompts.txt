@@ -1,4 +1,63 @@
-Generate a flat 2D button image labeled “Start” suitable for web, transparent PNG, soft green palette.
-Create 16 simple square card face images (1024x1365) with bold text: 8 “Problem” labels and 8 matching “Solution” labels, minimal style, readable on mobile.
-Create a subtle ocean-inspired seamless background texture (PNG).
-Generate a short positive “ding” sound for a correct match, and a short “whoosh” for card flip (WAV, <200ms).
+OBJECTIVE
+Generate lightweight, no-image assets as plain text/emoji + tiny strings that plug directly into the codebase.
+
+A) EMOJI ICON MAP (Problem + Solution)
+For each pair below, output:
+- key: kebab-case id (same as code)
+- problem_emoji (1–2 emoji)
+- solution_emoji (1–2 emoji)
+
+Pairs (IDs):
+- plastic-bag → reusable tote
+  id: plastic-bag
+- styrofoam-box → reusable lunch box
+  id: styrofoam-box
+- single-straw → metal/bamboo straw
+  id: single-straw
+- ghost-nets → net retrieval & recycling
+  id: ghost-nets
+- polluted-canal → community cleanup & booms
+  id: polluted-canal
+- clogged-drains → grate cleaning & awareness
+  id: clogged-drains
+- open-burning → sorting & proper collection
+  id: open-burning
+- festival-litter → green events & volunteers
+  id: festival-litter
+
+FORMAT (JSON array)
+[
+  {
+    "id":"plastic-bag",
+    "problem_emoji":"🛍️",
+    "solution_emoji":"🛒👜"
+  },
+  ...
+]
+
+B) MATCH TIPS (MICROCOPY)
+For each id above, produce a single sentence (≤110 chars) practical tip localized to Vietnam where appropriate.
+FORMAT (JSON array of {id, tip})
+
+C) HUD & UI MICROCOPY
+Output short strings for:
+- start_button
+- info_button
+- restart_button
+- quit_button
+- play_again
+- back_to_menu
+- lose_title
+- lose_line
+- win_title
+- home_bot_hint (≤60 chars)
+FORMAT (JSON object)
+
+D) LOSE-SCREEN LINES (ALTERNATES)
+Provide 6 alternate “sad but hopeful” one-liners (≤80 chars each).
+FORMAT (JSON array)
+
+RULES
+- Use emoji only (no PNG/SVG).
+- Keep lines short and friendly.
+- No libraries, no HTML in strings.

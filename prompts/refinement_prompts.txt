@@ -1,4 +1,42 @@
-The cards don’t flip back when mismatched. Here is my handler, please fix it: [paste].
-Timer keeps running on results; stop when all pairs matched.
-Add Restart and Quit buttons to HUD.
-Prevent double-click on already matched cards.
+GOAL
+Iterate on UX, accessibility, performance, and learning clarity without adding libraries or image assets.
+
+REFINEMENT TASKS (use one per run)
+
+1) Card Icon Pass
+Add a function `getCardEmoji(card)` that maps each PAIRS id + kind to a 1–2 emoji string. Render it in `.face-content` above the label with a larger font-size, and ensure screen readers keep the text label (aria-hidden on the emoji span if needed).
+
+2) Difficulty Tuning
+Expose `timeLimit`, `lives`, and `wrongFlipPenaltyMs` constants. Create three presets: Easy (180s, 7 lives), Normal (120s, 5 lives), Hard (90s, 3 lives). Add a select on the home screen and wire it into game start.
+
+3) Lives Indicator
+Add a small lives display to the HUD (e.g., "Lives: ♥♥♥♥♥") that updates on wrong matches. Use text/emoji only; ensure color contrast is accessible.
+
+4) Mobile Touch Polish
+Increase card touch targets to at least 44×44 CSS px. Add passive touch listeners. Prevent double-tap zoom issues on iOS for the bot button. Test that swiping doesn’t scroll the page during game interactions.
+
+5) Reduced Motion
+Respect `prefers-reduced-motion`. Disable flip animation, fireworks, and rain when enabled; replace with static success/failure icons and immediate stat reveal.
+
+6) Localization Hook
+Prepare strings in a `STRINGS` object with `en` and `vi` keys. Use short, human translations. Make language toggleable via a small button on the home HUD. No remote loading.
+
+7) Performance Audit
+- Avoid layout thrash in the home-bot loop (cache bounds, minimize DOM writes).
+- Batch style writes via `requestAnimationFrame`.
+- Lower fireworks particle count on low DPR or when window is hidden (`visibilitychange`).
+
+8) A11y Audit
+- Ensure all focusable elements have visible focus styles.
+- Constrain tab order on active screen only.
+- Announce win/lose with `aria-live="assertive"` line while keeping fireworks/rain purely visual.
+
+9) Persistence
+Store best time and least moves in `localStorage`. Show a tiny “Best” row on results. Provide a “Reset stats” button in the info dialog.
+
+10) Testing Checklist (output as markdown)
+- Flip keyboard-only flow
+- Screen reader reads labels and tips
+- Win/lose transitions don’t trap focus
+- Mobile tap accuracy on small screens
+- Performance stays ≥ 55fps on modest devices

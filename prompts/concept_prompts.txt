@@ -1,3 +1,59 @@
-I want to make a simple web game about plastic waste on Vietnam’s coasts. Give me 5 ideas using board/card/dice mechanics that teach real actions communities can take.
-I like the memory matching idea. Propose 8 Problem ↔ Solution pairs that are realistic in Vietnam (English labels).
-Write one sentence per pair explaining how the solution addresses the problem.
+TITLE: CoastGuard — Match Problems to Solutions
+
+GOAL
+Create a small, joyful, web-based game that teaches quick actions to reduce plastic waste in Vietnam. Players flip cards to match a “Problem” with its “Solution”. Learning happens through short tips shown on correct matches.
+
+PLAYER
+Ages 9–99 • quick play (2–4 minutes) • mouse/touch friendly • accessible (keyboard + screen reader).
+
+CORE PILLARS
+1) Learn by Doing — each match reveals a real micro-action.
+2) Feel Good Feedback — fireworks on win; sad rainy scene on loss.
+3) Friendly Immersion — mini “cleanup bot” roams the home screen and collects trash emoji.
+
+THEME & TONE
+Hopeful, local, practical. Vietnamese context. Light humor. Emoji icons instead of images.
+
+VISUAL DIRECTION
+Green palette:
+- Primary #4C763B
+- Accent #B0CE88
+- Accent-2 #9FBE77
+- Deep #043915
+Soft cards, rounded corners, subtle shadows, clean type. Background uses soft radial gradients.
+
+MECHANICS
+- 8 pairs (16 cards total). Flip to find Problem ↔ Solution.
+- Timer limit: 120s.
+- Lives: 5. Wrong pair costs 1 life.
+- Stats HUD: Pairs, Moves, Time.
+- Win: fireworks canvas overlay + animated count-up of stats.
+- Lose: rain + floating trash canvas; “sad cloud” wobble animation.
+
+HOME SCREEN MINI-PLAY
+- Fullscreen roaming layer behind the welcome card.
+- Tiny bot (emoji 🤖) moves toward cursor/touch; click/tap to boost speed.
+- Random trash emoji scattered; bot “collects” when close; count badge updates.
+
+ACCESSIBILITY
+- Cards are buttons with ARIA labels & keyboard support (Enter/Space).
+- Live region for the educational tip.
+- Dialog uses native `<dialog>` or graceful fallback.
+
+CONTENT (PAIRS)
+- Plastic bag → Reusable tote
+- Styrofoam lunch box → Reusable lunch box
+- Single-use straw → Metal/Bamboo straw
+- Ghost fishing nets → Net retrieval & recycling
+- Polluted canal → Community cleanup & booms
+- Trash in drains → Grate cleaning & awareness
+- Open burning → Sorting & proper collection
+- Festival litter → Green events & volunteers
+
+NON-GOALS / CONSTRAINTS
+- No external libraries or images; use emoji only.
+- Single HTML/CSS/JS bundle.
+- Runs offline.
+
+OUTPUT REQUEST
+Pitch small extensions (new topics, modes, achievements) that keep the above tone and constraints.

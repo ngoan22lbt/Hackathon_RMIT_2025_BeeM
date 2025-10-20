@@ -1,5 +1,74 @@
-Give me HTML structure for a simple game with three screens: Menu, Game, Results. I want to toggle with JS.
-Provide CSS to make a clean layout, 4×4 responsive grid, and simple card flip effect without external libs.
-Write JS to build a deck from Problem ↔ Solution pairs, shuffle, handle flips, match logic, HUD (pairs/moves/time), and a results screen.
-Add a short educational tip that shows only when a correct pair is made.
-Ensure keyboard accessibility: pressing Enter/Space on a focused card should flip it.
+TASK
+Generate a single-page HTML/CSS/JS app implementing “CoastGuard: Match Problems to Solutions”.
+
+FILES
+- index.html (single file OK) that references style.css and script.js, or inline for simplicity.
+- No external libs; emoji only.
+
+REQUIRED SCREENS & IDS
+1) Home (id="main-menu")
+   - Welcome card (.welcome-card)
+   - Start button (#start-btn), Info button (#info-btn)
+   - Fullscreen roaming layer (#home-layer)
+     - Cleanup bot (#hp-bot) — click to boost
+     - Floating HUD (.home-hud) with count (#hp-count)
+
+2) Game (id="game-play")
+   - HUD header (.hud) with:
+     - #pairs-found / #pairs-total / #moves / #time
+   - Grid container (#grid)
+   - Tip live region (#tip)
+
+3) Results (id="results")
+   - Fireworks canvas (#fx-canvas)
+   - Stats: #r-pairs, #r-moves, #r-time
+   - Buttons: #play-again-btn, #back-menu-btn
+
+4) Lose (id="lose-screen")
+   - Rain/float canvas (#lose-fx)
+   - Buttons: #retry-btn, #menu-btn
+   - Wobbling title (.sad-wobble) and crying cloud (.sad-cloud)
+
+GAMEPLAY
+- 8 pairs → 16 cards. Data array `PAIRS` with {id, problem, solution, tip}.
+- Timer: `timeLimit = 120` seconds; when ≥ limit → lose.
+- Lives: `lives = 5`; wrong match decrements; when 0 → lose.
+- Moves counted when attempting second card.
+- On match: lock both (aria-pressed="true"), show tip (live region).
+- On win: stop timer, animate count-up values, start fireworks.
+- On lose: show lose screen, start rain canvas.
+
+CARD RENDER
+- Each card is a `<button class="card">` with a 3D flip.
+- Front shows:
+  - Big emoji icon (from a mapping function) + label + badge (“Problem”/“Solution”).
+- Back shows “COASTGUARD” pattern.
+- Keyboard: Enter/Space triggers flip. Focus order is grid order.
+
+HOME BOT
+- Runs only on Home screen.
+- Bot follows cursor/touch; seeks nearest trash when idle.
+- Random trash emoji elements (.hp-trash) spawn around screen.
+- Bot collects when within ~28px; increment #hp-count.
+- Click bot → speed boost ~2s.
+
+ACCESSIBILITY
+- ARIA roles:
+  - Grid uses role="grid"; cards set role="gridcell".
+  - Tip area role="status" aria-live="polite".
+  - Buttons with descriptive aria-labels.
+- Dialog `<dialog id="info-dialog">` with fallback.
+
+ANIMATIONS
+- Fireworks: canvas with sparks, gravity, friction, HSLA colors, soft trail.
+- Lose: canvas with rain lines + floating trash emoji; “sad cloud” wobble; desaturated backdrop.
+
+STYLE
+- CSS variables:
+  --clr-primary #4C763B, --clr-accent #B0CE88, --clr-accent-2 #9FBE77, --clr-deep #043915
+- Soft card shadows, rounded corners (12–18px), responsive grid (4 cols → 2 cols ≤640px).
+- Keep card front readable; avoid huge text overflow.
+
+DELIVERABLE
+- Complete, runnable code with IDs/classes as specified.
+- Inline comments explaining key blocks (grid build, flip logic, fireworks, rain, home-bot).
