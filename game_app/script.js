@@ -111,6 +111,113 @@ function stopTimer() {
   timer = null;
 }
 
+
+// ===== Fireworks engine (canvas) =====
+let fxReq = null;
+let fxRunning = false;
+
+function startFireworks(durationMs = 6000) {
+  const canvas = document.getElementById("fx-canvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+
+  function resize() {
+    const { innerWidth:w, innerHeight:h } = window;
+    canvas.width = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
+    canvas.style.width = w + "px";
+    canvas.style.height = h + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener("resize", resize);
+
+  const sparks = [];
+  const GRAVITY = 0.12;
+  const FRICTION = 0.996;
+
+  function burst(x, y, hueBase) {
+    const N = 60 + (Math.random()*20|0);
+    for (let i=0;i<N;i++){
+      const angle = (Math.PI*2*i)/N + (Math.random()*0.2 - 0.1);
+      const speed = 2 + Math.random()*3.5;
+      sparks.push({
+        x, y,
+        vx: Math.cos(angle)*speed,
+        vy: Math.sin(angle)*speed,
+        life: 60 + (Math.random()*20|0),
+        age: 0,
+        hue: hueBase + (Math.random()*20-10)
+      });
+    }
+  }
+
+  const endAt = performance.now() + durationMs;
+  fxRunning = true;
+
+  function loop(ts){
+    if (!fxRunning) return;
+    fxReq = requestAnimationFrame(loop);
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    if (ts < endAt && Math.random() < 0.08){
+      const w = canvas.width / (window.devicePixelRatio||1);
+      const h = canvas.height / (window.devicePixelRatio||1);
+      burst(Math.random()*w*0.8 + w*0.1, Math.random()*h*0.5 + h*0.1, 110+Math.random()*40);
+    }
+
+    for (let i=sparks.length-1;i>=0;i--){
+      const s = sparks[i];
+      s.age++;
+      s.vx *= FRICTION;
+      s.vy = s.vy*FRICTION + GRAVITY;
+      s.x += s.vx;
+      s.y += s.vy;
+
+      const alpha = Math.max(0, 1 - s.age / s.life);
+      if (alpha <= 0){ sparks.splice(i,1); continue; }
+
+      const ctx2 = ctx;
+      ctx2.beginPath();
+      ctx2.arc(s.x, s.y, 2.2, 0, Math.PI*2);
+      ctx2.fillStyle = `hsla(${s.hue}, 70%, 55%, ${alpha})`;
+      ctx2.fill();
+    }
+
+    ctx.fillStyle = "rgba(255,255,255,0.02)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+  }
+  loop();
+
+  setTimeout(stopFireworks, durationMs + 1000);
+}
+
+function stopFireworks(){
+  fxRunning = false;
+  if (fxReq) cancelAnimationFrame(fxReq);
+  fxReq = null;
+  const canvas = document.getElementById("fx-canvas");
+  if (canvas){
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+}
+
+// ===== Count-up animation for stats =====
+function countUp(el, to, duration=700, formatter=(v)=>v.toString()){
+  const start = 0;
+  const t0 = performance.now();
+  function step(t){
+    const p = Math.min(1, (t - t0) / duration);
+    const val = Math.round(start + (to - start) * (1 - Math.pow(1-p, 3))); // easeOutCubic
+    el.textContent = formatter(val);
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+
 // ===== Deck building: turn pairs into 16 cards (8 problems + 8 solutions) =====
 function buildDeck(pairs) {
   const cards = [];
@@ -260,11 +367,25 @@ function flip(btn, on) {
 }
 
 function showResults() {
-  document.getElementById("r-pairs").textContent = (deck.length / 2).toString();
-  document.getElementById("r-moves").textContent = moves.toString();
-  document.getElementById("r-time").textContent = formatSeconds(seconds);
+  const totalPairs = deck.length / 2;
+  const movesFinal = moves;
+  const secondsFinal = seconds;
+
   switchScreen("results");
+
+  // animate stats
+  countUp(document.getElementById("r-pairs"), totalPairs, 600);
+  countUp(document.getElementById("r-moves"), movesFinal, 700);
+  countUp(
+    { textContent: "0", set textContent(v){ this._v=v; document.getElementById("r-time").textContent = formatSeconds(v); } },
+    secondsFinal,
+    900
+  );
+
+  // launch fireworks
+  startFireworks(6500);
 }
+
 
 function switchScreen(name) {
   elMenu.classList.remove("active");
@@ -284,6 +405,10 @@ elPlayAgain.addEventListener("click", startGame);
 elBackMenu.addEventListener("click", () => switchScreen("menu"));
 
 elGrid.addEventListener("click", onCardClick);
+
+elPlayAgain.addEventListener("click", () => { stopFireworks(); startGame(); });
+elBackMenu.addEventListener("click", () => { stopFireworks(); switchScreen("menu"); });
+
 
 // Keyboard support
 elGrid.addEventListener("keydown", (e) => {

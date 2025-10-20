@@ -1,15 +1,39 @@
 :root {
-  --bg: #f6faf9;
-  --text: #1f2a2e;
-  --muted: #6c7a7f;
-  --brand: #0aa37f;
-  --brand-2: #058a6b;
-  --card: #ffffff;
-  --line: #d5e2df;
+  /* base tokens (your requested greens) */
+  --clr-primary: #4C763B;
+  /* main green */
+  --clr-accent: #B0CE88;
+  /* light green */
+  --clr-accent-2: #9FBE77;
+  /* extra light for stripes */
+  --clr-deep: #043915;
+  /* darkest green */
+
+  /* semantic aliases used by the rest of the CSS */
+  --brand: var(--clr-primary);
+  --brand-2: var(--clr-deep);
+  --line: var(--clr-accent);
+  --text: var(--clr-deep);
+  --bg: #F4F8EF;
+  --card: #FFFFFF;
+  --muted: var(--clr-primary);
+  --white: #FFFFFF;
+
+  /* stripe colors for the card back */
+  --stripe-1: var(--clr-accent);
+  --stripe-2: var(--clr-accent-2);
 }
 
-* { box-sizing: border-box; }
-html, body { height: 100%; }
+/* ====== existing global styles (keep as-is) ====== */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
 body {
   margin: 0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
@@ -17,8 +41,14 @@ body {
   background: var(--bg);
 }
 
-.screen { display: none; min-height: 100%; }
-.screen.active { display: block; }
+.screen {
+  display: none;
+  min-height: 100%;
+}
+
+.screen.active {
+  display: block;
+}
 
 .container {
   max-width: 880px;
@@ -27,26 +57,72 @@ body {
   text-align: center;
 }
 
-h1, h2, h3 { margin: 0 0 8px; }
-.tagline { color: var(--muted); margin-top: 8px; }
+/* ====== BIG WELCOME CARD ====== */
+.welcome-card {
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 16px;
+  padding: 28px 22px;
+  text-align: left;
+  margin-top: 8px;
+}
 
-.menu-actions { display: flex; gap: 12px; justify-content: center; margin-top: 20px; }
+.welcome-card h2 {
+  margin: 0 0 8px;
+  color: var(--brand-2);
+  font-size: 1.75rem;
+}
+
+.welcome-copy {
+  margin: 6px 0 14px;
+  color: var(--text);
+}
+
+.howto {
+  margin: 0 0 18px 20px;
+  padding: 0;
+}
+
+.howto li {
+  margin: 6px 0;
+  line-height: 1.4;
+}
+
+/* Buttons */
+.menu-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-start;
+}
 
 .btn {
   padding: 10px 16px;
-  border: 1px solid var(--line);
+  border: 2px solid var(--line);
   background: var(--card);
   color: var(--text);
   border-radius: 10px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
 }
+
 .btn.primary {
   background: var(--brand);
   border-color: var(--brand);
-  color: white;
+  color: var(--white);
+  /* was #fff */
 }
-.btn:focus { outline: 2px solid var(--brand-2); outline-offset: 2px; }
+
+.btn.outline {
+  background: var(--card);
+  border-color: var(--brand);
+  color: var(--brand-2);
+}
+
+.btn:focus {
+  outline: 2px solid var(--brand-2);
+  outline-offset: 2px;
+}
+
 
 .hud {
   display: grid;
@@ -56,8 +132,17 @@ h1, h2, h3 { margin: 0 0 8px; }
   padding: 16px 20px;
   border-bottom: 1px solid var(--line);
 }
-.stats { display: flex; gap: 16px; flex-wrap: wrap; }
-.hud-actions { display: flex; gap: 10px; }
+
+.stats {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.hud-actions {
+  display: flex;
+  gap: 10px;
+}
 
 .grid {
   max-width: 880px;
@@ -71,40 +156,48 @@ h1, h2, h3 { margin: 0 0 8px; }
 .card {
   position: relative;
   width: 100%;
-  aspect-ratio: 3 / 4;
-  border: 1px solid var(--line);
+  aspect-ratio: 3/4;
+  border: 1.5px solid var(--line);
   border-radius: 12px;
   background: var(--card);
   cursor: pointer;
   transform-style: preserve-3d;
-  transition: transform 0.25s ease;
+  transition: transform .25s ease;
 }
-.card[aria-pressed="true"] { cursor: default; }
+
+.card[aria-pressed="true"] {
+  cursor: default;
+}
 
 .card-inner {
-  position: absolute; inset: 0;
+  position: absolute;
+  inset: 0;
   transform-style: preserve-3d;
-  transition: transform 0.4s ease;
+  transition: transform .4s ease;
 }
-.card.flipped .card-inner { transform: rotateY(180deg); }
+
+.card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
 
 .card-face {
-  position: absolute; inset: 0;
-  display: grid; place-items: center;
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
   padding: 10px;
   backface-visibility: hidden;
   border-radius: 12px;
 }
 
-.card-front {
-  background: var(--card);
-}
 .card-back {
-  background: repeating-linear-gradient(45deg, #e6f3f0, #e6f3f0 8px, #d9ede8 8px, #d9ede8 16px);
+  background: repeating-linear-gradient(45deg,
+      var(--stripe-1),
+      var(--stripe-1) 8px,
+      var(--stripe-2) 8px,
+      var(--stripe-2) 16px);
   transform: rotateY(180deg);
-  color: #0b6150;
-  font-weight: 700;
-  letter-spacing: 0.5px;
+  color: var(--brand-2);
 }
 
 .badge {
@@ -113,7 +206,7 @@ h1, h2, h3 { margin: 0 0 8px; }
   padding: 4px 8px;
   border: 1px solid var(--line);
   border-radius: 999px;
-  color: var(--muted);
+  color: var(--brand-2);
   margin-top: 6px;
 }
 
@@ -121,17 +214,69 @@ h1, h2, h3 { margin: 0 0 8px; }
   min-height: 28px;
   text-align: center;
   color: var(--brand-2);
-  font-weight: 600;
+  font-weight: 700;
   margin: 6px 0 20px;
 }
 
 dialog {
   max-width: 720px;
-  border: 1px solid var(--line);
+  border: 1.5px solid var(--line);
   border-radius: 12px;
   padding: 16px 16px 12px;
 }
 
 @media (max-width: 640px) {
-  .grid { grid-template-columns: repeat(2, 1fr); }
+  .menu-actions {
+    justify-content: center;
+  }
+
+  .welcome-card {
+    text-align: left;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ========== Results page polish + fireworks canvas ========== */
+.fx-canvas{
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1; /* behind the card but above background */
+}
+
+.results-wrap{
+  position: relative;
+  z-index: 2; /* above fireworks */
+}
+
+.results-card{
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 18px;
+  padding: 28px 22px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(4,57,21,0.08);
+  animation: pop-in 420ms ease-out both;
+}
+
+.results-card h2{
+  margin: 0 0 8px;
+  color: var(--brand-2);
+  font-size: 1.9rem;
+}
+
+.scoreline{
+  margin: 6px 0 16px;
+  font-weight: 700;
+  color: var(--brand-2);
+}
+
+@keyframes pop-in{
+  from{ transform: translateY(8px) scale(.98); opacity: .0; }
+  to{ transform: translateY(0) scale(1); opacity: 1; }
 }
