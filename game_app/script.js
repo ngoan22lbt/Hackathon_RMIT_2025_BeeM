@@ -391,10 +391,22 @@ function switchScreen(name) {
   elMenu.classList.remove("active");
   elGame.classList.remove("active");
   elResults.classList.remove("active");
-  if (name === "menu") elMenu.classList.add("active");
-  if (name === "game") elGame.classList.add("active");
-  if (name === "results") elResults.classList.add("active");
+
+  if (name === "menu") {
+    elMenu.classList.add("active");
+    setTimeout(hpStart, 0); // start fullscreen bot
+  }
+  if (name === "game") {
+    elGame.classList.add("active");
+    hpStop();
+  }
+  if (name === "results") {
+    elResults.classList.add("active");
+    hpStop();
+  }
 }
+
+
 
 // ===== Events =====
 elStart.addEventListener("click", startGame);
@@ -429,6 +441,150 @@ document.addEventListener("keydown", (e) => {
     elDialog.close();
   }
 });
+
+
+// ====== Fullscreen Home Bot (roams anywhere in #main-menu) ======
+let hpLoop = null;
+let hpLayer, hpBot, hpCountEl, hpMenu;
+let hpState = {
+  x: 160, y: 160,
+  vx: 0, vy: 0,
+  baseSpeed: 1.1,
+  boostSpeed: 2.4,
+  boostUntil: 0,
+  aimX: null, aimY: null,
+  collected: 0,
+  trash: []
+};
+
+function hpSpawnTrash(n=14){
+  const rect = hpLayer.getBoundingClientRect();
+  for (let i=0;i<n;i++){
+    const el = document.createElement("div");
+    el.className = "hp-trash";
+    const options = ["🛍️","🗑️","🍶","🥤","🧃","🍽️","♻️","🧴","🧂"];
+    el.textContent = options[(Math.random()*options.length)|0];
+    const x = Math.random()*(rect.width-36)+6;
+    const y = Math.random()*(rect.height-36)+6;
+    el.style.left = `${x}px`;
+    el.style.top  = `${y}px`;
+    hpLayer.appendChild(el);
+    hpState.trash.push({el, x, y});
+  }
+}
+
+function hpStart(){
+  hpMenu = document.getElementById("main-menu");
+  hpLayer = document.getElementById("home-layer");
+  hpBot   = document.getElementById("hp-bot");
+  hpCountEl = document.getElementById("hp-count");
+  if (!hpMenu || !hpLayer || !hpBot || hpLoop) return;
+
+  // reset state
+  const r = hpLayer.getBoundingClientRect();
+  hpState.x = r.width/2; hpState.y = r.height/2;
+  hpState.vx = 0; hpState.vy = 0;
+  hpState.collected = 0;
+  hpState.trash = [];
+  hpCountEl.textContent = "0";
+  hpLayer.querySelectorAll(".hp-trash").forEach(n=>n.remove());
+
+  hpSpawnTrash(16);
+
+  // mouse aim across the full section
+  const onMove = (e) => {
+    const rect = hpLayer.getBoundingClientRect();
+    hpState.aimX = Math.max(6, Math.min(rect.width-6, e.clientX - rect.left));
+    hpState.aimY = Math.max(6, Math.min(rect.height-6, e.clientY - rect.top));
+  };
+  hpMenu.addEventListener("mousemove", onMove);
+  // touch aim (mobile)
+  hpMenu.addEventListener("touchmove", (e) => {
+    const t = e.touches[0]; if (!t) return;
+    onMove({ clientX: t.clientX, clientY: t.clientY });
+  }, {passive:true});
+
+  // boost on bot click/tap
+  const onBoost = () => {
+    hpState.boostUntil = performance.now() + 2000;
+    hpBot.classList.add("hp-boost");
+    setTimeout(()=> hpBot.classList.remove("hp-boost"), 2100);
+  };
+  hpBot.addEventListener("click", onBoost);
+  hpBot.addEventListener("touchstart", (e)=>{ onBoost(); e.preventDefault(); }, {passive:false});
+
+  // main loop
+  const step = (t) => {
+    let targetX = hpState.aimX, targetY = hpState.aimY;
+
+    // no cursor inside? chase nearest trash
+    if (targetX == null || targetY == null) {
+      let bestD = Infinity, tx=null, ty=null;
+      for (const it of hpState.trash){
+        const dx = it.x - hpState.x, dy = it.y - hpState.y;
+        const d2 = dx*dx + dy*dy;
+        if (d2 < bestD){ bestD = d2; tx = it.x; ty = it.y; }
+      }
+      if (tx != null){ targetX = tx; targetY = ty; } else { hpSpawnTrash(8); }
+    }
+
+    const speed = (t < hpState.boostUntil) ? hpState.boostSpeed : hpState.baseSpeed;
+    if (targetX != null){
+      const dx = targetX - hpState.x;
+      const dy = targetY - hpState.y;
+      const dist = Math.hypot(dx, dy) || 1;
+      const ax = (dx/dist) * 0.35;
+      const ay = (dy/dist) * 0.35;
+      hpState.vx = (hpState.vx + ax) * 0.95;
+      hpState.vy = (hpState.vy + ay) * 0.95;
+      hpState.x += hpState.vx * speed * 1.6;
+      hpState.y += hpState.vy * speed * 1.6;
+    }
+
+    // keep in bounds of the full section
+    const rect = hpLayer.getBoundingClientRect();
+    hpState.x = Math.max(12, Math.min(rect.width-12, hpState.x));
+    hpState.y = Math.max(12, Math.min(rect.height-12, hpState.y));
+
+    // move bot
+    hpBot.style.left = `${hpState.x}px`;
+    hpBot.style.top  = `${hpState.y}px`;
+
+    // collect trash nearby
+    for (let i=hpState.trash.length-1;i>=0;i--){
+      const it = hpState.trash[i];
+      const d = Math.hypot(it.x - hpState.x, it.y - hpState.y);
+      if (d < 28){
+        it.el.classList.add("pop");
+        setTimeout(()=> it.el.remove(), 160);
+        hpState.trash.splice(i,1);
+        hpState.collected += 1;
+        hpCountEl.textContent = hpState.collected.toString();
+      }
+    }
+
+    // top up trash sometimes
+    if (Math.random() < 0.01 && hpState.trash.length < 20) hpSpawnTrash(1);
+
+    hpLoop = requestAnimationFrame(step);
+  };
+  hpLoop = requestAnimationFrame(step);
+
+  // handle resize so bounds stay correct
+  window.addEventListener("resize", () => {
+    const rr = hpLayer.getBoundingClientRect();
+    hpState.x = Math.max(12, Math.min(rr.width-12, hpState.x));
+    hpState.y = Math.max(12, Math.min(rr.height-12, hpState.y));
+  });
+}
+
+function hpStop(){
+  if (hpLoop){ cancelAnimationFrame(hpLoop); hpLoop = null; }
+  const layer = document.getElementById("home-layer");
+  if (layer){ layer.querySelectorAll(".hp-trash").forEach(n=>n.remove()); }
+  hpState.aimX = hpState.aimY = null;
+}
+
 
 // Start at menu
 switchScreen("menu");

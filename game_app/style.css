@@ -280,3 +280,75 @@ dialog {
   from{ transform: translateY(8px) scale(.98); opacity: .0; }
   to{ transform: translateY(0) scale(1); opacity: 1; }
 }
+
+
+
+/* Make the home screen fill the viewport */
+#main-menu.screen.active{
+  min-height: 100dvh; /* mobile-friendly viewport height */
+  position: relative;
+  overflow: hidden;    /* keep the roaming layer tidy */
+}
+
+/* Fullscreen roaming layer lives behind the card/buttons */
+.home-layer{
+  position: absolute;
+  inset: 0;
+  z-index: 1;              /* below the card/buttons */
+  pointer-events: none;    /* let UI be clickable */
+  background:
+    radial-gradient(180px 120px at 18% 22%, rgba(176,206,136,.14), transparent 60%),
+    radial-gradient(200px 120px at 82% 68%, rgba(76,118,59,.08), transparent 60%);
+}
+
+/* Keep welcome card above the roaming layer */
+.welcome-card{ position: relative; z-index: 2; }
+
+/* Floating HUD (clickable even with layer pointer-events off) */
+.home-hud{
+  position: absolute;
+  top: 12px; left: 12px;
+  z-index: 3;
+  pointer-events: auto;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 10px;
+  display: flex; gap: 8px; align-items: center;
+}
+.home-hud .dot{ opacity: .6; }
+
+/* Bot sits above the layer; clickable */
+.hp-bot{
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--brand);
+  background: var(--card);
+  display: grid; place-items: center;
+  font-size: 20px; line-height: 1;
+  cursor: pointer;
+  pointer-events: auto; /* clickable even though layer is none */
+  z-index: 3;
+  transition: box-shadow .15s ease, transform .12s ease;
+}
+.hp-bot:hover{ box-shadow: 0 0 0 3px rgba(76,118,59,.18) inset; }
+.hp-bot.hp-boost{ box-shadow: 0 0 0 3px rgba(4,57,21,.25) inset; transform: translate(-50%, -50%) scale(1.05); }
+
+/* Trash roam anywhere across the section */
+.hp-trash{
+  position: absolute;
+  width: 30px; height: 30px;
+  display: grid; place-items: center;
+  font-size: 20px; user-select: none;
+  transition: transform .2s ease, opacity .2s ease;
+  z-index: 2; /* above background, below card unless overlapping margins */
+  pointer-events: none;
+}
+.hp-trash.pop{ transform: scale(0.6) rotate(12deg); opacity: 0; }
+
+/* gentle float */
+@keyframes hp-float { 0%{transform:translateY(0)} 50%{transform:translateY(-4px)} 100%{transform:translateY(0)} }
+.hp-trash{ animation: hp-float 2.8s ease-in-out infinite; }

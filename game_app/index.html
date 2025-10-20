@@ -9,6 +9,7 @@
 <body>
   <!-- Main Menu -->
 <section id="main-menu" class="screen active" aria-labelledby="menu-title">
+  
   <div class="container">
     <h1 id="menu-title" class="sr-only">CoastGuard</h1>
 
@@ -29,8 +30,23 @@
         <button id="info-btn" class="btn outline" aria-haspopup="dialog" aria-controls="info-dialog">Info</button>
       </div>
     </div>
+    <!-- Fullscreen Home Layer (under the welcome card/buttons) -->
+    <div id="home-layer" class="home-layer" aria-hidden="false">
+      <!-- floating HUD -->
+      <div class="home-hud badge">
+        <strong>Trash Collected:</strong> <span id="hp-count">0</span>
+        <span class="dot">•</span> Move mouse to guide the bot — click the bot to boost
+      </div>
+
+      <!-- roaming bot -->
+      <button id="hp-bot" class="hp-bot" aria-label="Cleanup bot" title="Click to boost!">🤖</button>
+      <!-- trash pieces are injected here -->
+    </div>
+
   </div>
+  
 </section>
+
   <!-- Gameplay -->
   <section id="game-play" class="screen" aria-labelledby="game-title">
     <header class="hud">
